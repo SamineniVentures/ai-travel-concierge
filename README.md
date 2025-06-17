@@ -14,6 +14,9 @@ npm run dev
 ```
 
 The app will be available at `http://localhost:5173`.
+The development server uses `VITE_API_URL` from `.env.development` to proxy API
+requests to the backend. You can adjust this URL if your backend runs on a
+different port.
 
 ### Production build
 
@@ -23,6 +26,14 @@ npm run build
 ```
 
 This will generate the static files in `frontend/dist`.
+
+### Deploying to Vercel
+
+To deploy the frontend on [Vercel](https://vercel.com), create a project with
+the **frontend** folder as the root directory. Set an environment variable named
+`VITE_API_URL` pointing to your backend API base URL (for example,
+`https://my-backend.example.com`). Vercel will run `npm run build` and serve the
+generated files from `frontend/dist`.
 
 ## Backend
 
