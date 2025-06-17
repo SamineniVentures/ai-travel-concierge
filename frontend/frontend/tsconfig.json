@@ -20,7 +20,7 @@
       }
     ],
     "paths": {
-      "@/*": ["./*"] // This path alias is relative to tsconfig.json (i.e., frontend/)
+      "@/*": ["./*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
