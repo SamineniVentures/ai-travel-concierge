@@ -8,10 +8,9 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover"
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select"
-import { MapPinIcon, CalendarDaysIcon, UsersIcon, SearchIcon, PlaneTakeoffIcon } from "lucide-react"
+import { MapPinIcon, CalendarDaysIcon, UsersIcon, SearchIcon, PlaneTakeoffIcon } from 'lucide-react'
 import { format } from "date-fns"
-import usCities from "../lib/us-cities.json"
-import { cn } from "@/lib/utils"
+import { cn } from "@/utils/cn"
 
 const searchSchema = z.object({
   origin: z.string().optional(),
@@ -22,98 +21,6 @@ const searchSchema = z.object({
 })
 
 type SearchFormValues = z.infer<typeof searchSchema>
-
-interface AutocompleteInputProps {
-  value: string | undefined
-  onChange: (value: string) => void
-  placeholder?: string
-  id: string
-  error?: string
-}
-
-const AutocompleteInput: React.FC<AutocompleteInputProps> = ({ value, onChange, placeholder, id, error }) => {
-  const [inputValue, setInputValue] = useState(value || "")
-  const [suggestions, setSuggestions] = useState<string[]>([])
-  const [showSuggestions, setShowSuggestions] = useState(false)
-  const inputRef = useRef<HTMLInputElement>(null)
-  const suggestionsRef = useRef<HTMLUListElement>(null)
-
-  useEffect(() => {
-    setInputValue(value || "")
-  }, [value])
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const currentVal = e.target.value
-    setInputValue(currentVal)
-    onChange(currentVal)
-
-    if (currentVal.length > 1) {
-      const filtered = usCities.filter((city) => city.toLowerCase().includes(currentVal.toLowerCase())).slice(0, 7)
-      setSuggestions(filtered)
-      setShowSuggestions(true)
-    } else {
-      setSuggestions([])
-      setShowSuggestions(false)
-    }
-  }
-
-  const handleSuggestionClick = (suggestion: string) => {
-    setInputValue(suggestion)
-    onChange(suggestion)
-    setSuggestions([])
-    setShowSuggestions(false)
-  }
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        inputRef.current &&
-        !inputRef.current.contains(event.target as Node) &&
-        suggestionsRef.current &&
-        !suggestionsRef.current.contains(event.target as Node)
-      ) {
-        setShowSuggestions(false)
-      }
-    }
-    document.addEventListener("mousedown", handleClickOutside)
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside)
-    }
-  }, [])
-
-  return (
-    <div className="relative w-full">
-      <Input
-        id={id}
-        type="text"
-        placeholder={placeholder}
-        value={inputValue}
-        onChange={handleInputChange}
-        onFocus={() => inputValue.length > 1 && suggestions.length > 0 && setShowSuggestions(true)}
-        ref={inputRef}
-        autoComplete="off"
-        className={cn(error && "border-red-500")}
-      />
-      {showSuggestions && suggestions.length > 0 && (
-        <ul
-          ref={suggestionsRef}
-          className="absolute z-10 w-full bg-background border border-border rounded-md shadow-lg mt-1 max-h-60 overflow-y-auto"
-        >
-          {suggestions.map((suggestion, index) => (
-            <li
-              key={index}
-              onClick={() => handleSuggestionClick(suggestion)}
-              className="px-3 py-2 hover:bg-accent cursor-pointer text-sm"
-            >
-              {suggestion}
-            </li>
-          ))}
-        </ul>
-      )}
-      {error && <p className="text-xs text-red-500 mt-1">{error}</p>}
-    </div>
-  )
-}
 
 export default function HeroSearchForm() {
   const {
@@ -155,14 +62,16 @@ export default function HeroSearchForm() {
           name="origin"
           control={control}
           render={({ field }) => (
-            <AutocompleteInput
+            <Input
               id="origin"
               placeholder="e.g. New York, NY"
-              value={field.value}
-              onChange={(val) => setValue("origin", val, { shouldValidate: true, shouldDirty: true })}
+              {...field}
+              onChange={(e) => setValue("origin", e.target.value, { shouldValidate: true, shouldDirty: true })}
+              className={cn(errors.origin && "border-red-500")} // Keep cn if needed for error styling
             />
           )}
         />
+        {errors.origin && <p className="text-xs text-red-500 mt-1">{errors.origin.message}</p>}
       </div>
       <div className="space-y-1">
         <label htmlFor="destination" className="text-sm font-medium text-muted-foreground flex items-center">
@@ -172,15 +81,16 @@ export default function HeroSearchForm() {
           name="destination"
           control={control}
           render={({ field }) => (
-            <AutocompleteInput
+            <Input
               id="destination"
               placeholder="e.g. Los Angeles, CA"
-              value={field.value}
-              onChange={(val) => setValue("destination", val, { shouldValidate: true, shouldDirty: true })}
-              error={errors.destination?.message}
+              {...field}
+              onChange={(e) => setValue("destination", e.target.value, { shouldValidate: true, shouldDirty: true })}
+              className={cn(errors.destination && "border-red-500")}
             />
           )}
         />
+        {errors.destination && <p className="text-xs text-red-500 mt-1">{errors.destination.message}</p>}
       </div>
       <div className="space-y-1">
         <label htmlFor="departureDate" className="text-sm font-medium text-muted-foreground flex items-center">
