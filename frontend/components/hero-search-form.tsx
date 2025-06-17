@@ -9,18 +9,22 @@ import { Button } from "@/components/ui/button"
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover"
 import { CustomDatePicker } from "@/components/custom-date-picker"
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select"
-import { MapPinIcon, CalendarDaysIcon, UsersIcon, SearchIcon, PlaneTakeoffIcon } from "lucide-react"
+import { MapPinIcon, CalendarDaysIcon, UsersIcon, SearchIcon, PlaneTakeoffIcon, PlaneIcon } from "lucide-react"
 import { useSearchStore } from "@/store/search-store"
 import { format } from "date-fns"
 import usCities from "@/lib/us-cities.json" // Import the city list
 import { cn } from "@/lib/utils"
 
 const searchSchema = z.object({
-  origin: z.string().optional(),
+  origin: z.string().min(1, "Origin is required"),
   destination: z.string().min(1, "Destination is required"),
-  departureDate: z.date().optional(),
+  departureDate: z.date({
+    required_error: "Departure date is required",
+  }),
   returnDate: z.date().optional(),
   travellers: z.string().min(1, "Number of travellers is required"),
+  cabinClass: z.enum(["economy", "business", "first"]).default("economy"),
+  tripType: z.enum(["one_way", "round_trip"]).default("round_trip"),
 })
 
 type SearchFormValues = z.infer<typeof searchSchema>
@@ -120,12 +124,12 @@ const AutocompleteInput: React.FC<AutocompleteInputProps> = ({ value, onChange, 
 }
 
 export default function HeroSearchForm() {
-  const { setSearchParams, fetchResults } = useSearchStore()
+  const { searchFlights, loading, error } = useSearchStore()
   const {
     control,
     handleSubmit,
     watch,
-    setValue, // Get setValue from useForm
+    setValue,
     formState: { errors },
   } = useForm<SearchFormValues>({
     resolver: zodResolver(searchSchema),
@@ -133,9 +137,12 @@ export default function HeroSearchForm() {
       origin: "",
       destination: "",
       travellers: "1",
+      cabinClass: "economy",
+      tripType: "round_trip",
     },
   })
 
+  const tripType = watch("tripType")
   const departureDate = watch("departureDate")
 
   const onSubmit: SubmitHandler<SearchFormValues> = (data) => {
@@ -144,15 +151,14 @@ export default function HeroSearchForm() {
       departureDate: data.departureDate ? format(data.departureDate, "yyyy-MM-dd") : undefined,
       returnDate: data.returnDate ? format(data.returnDate, "yyyy-MM-dd") : undefined,
     }
-    setSearchParams(params)
-    fetchResults(params)
+    searchFlights(params)
     console.log("Search Submitted:", params)
   }
 
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="bg-background p-4 sm:p-6 rounded-lg shadow-xl grid grid-cols-1 md:grid-cols-2 lg:grid-cols-[1.5fr_1.5fr_1fr_1fr_1fr_auto] gap-4 items-start"
+      className="bg-background/95 backdrop-blur-sm p-4 sm:p-6 rounded-lg shadow-xl grid grid-cols-1 md:grid-cols-2 lg:grid-cols-[1.5fr_1.5fr_1fr_1fr_1fr_auto] gap-4 items-start"
     >
       {/* Origin */}
       <div className="space-y-1">
@@ -167,7 +173,8 @@ export default function HeroSearchForm() {
               id="origin"
               placeholder="e.g. New York, NY"
               value={field.value}
-              onChange={(val) => setValue("origin", val, { shouldValidate: true, shouldDirty: true })} // Use setValue
+              onChange={(val) => setValue("origin", val, { shouldValidate: true, shouldDirty: true })}
+              error={errors.origin?.message}
             />
           )}
         />
@@ -186,7 +193,7 @@ export default function HeroSearchForm() {
               id="destination"
               placeholder="e.g. Los Angeles, CA"
               value={field.value}
-              onChange={(val) => setValue("destination", val, { shouldValidate: true, shouldDirty: true })} // Use setValue
+              onChange={(val) => setValue("destination", val, { shouldValidate: true, shouldDirty: true })}
               error={errors.destination?.message}
             />
           )}
@@ -204,75 +211,178 @@ export default function HeroSearchForm() {
           render={({ field }) => (
             <Popover>
               <PopoverTrigger asChild>
-                <Button variant="outline" className="w-full justify-start text-left font-normal">
+                <Button
+                  variant="outline"
+                  className={cn(
+                    "w-full justify-start text-left font-normal",
+                    !field.value && "text-muted-foreground",
+                    errors.departureDate && "border-red-500"
+                  )}
+                >
+                  <CalendarDaysIcon className="mr-2 h-4 w-4" />
                   {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className="w-auto p-0">
-                <CustomDatePicker selected={field.value} onSelect={field.onChange} />
-              </PopoverContent>
-            </Popover>
-          )}
-        />
-      </div>
-
-      {/* Return Date */}
-      <div className="space-y-1">
-        <label htmlFor="returnDate" className="text-sm font-medium text-muted-foreground flex items-center">
-          <CalendarDaysIcon className="w-4 h-4 mr-2" /> Return
-        </label>
-        <Controller
-          name="returnDate"
-          control={control}
-          render={({ field }) => (
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button variant="outline" className="w-full justify-start text-left font-normal">
-                  {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0">
+              <PopoverContent className="w-auto p-0" align="start">
                 <CustomDatePicker
+                  mode="single"
                   selected={field.value}
                   onSelect={field.onChange}
-                  disabled={(date) => (departureDate ? date < departureDate : false)}
+                  disabled={(date) => date < new Date()}
+                  initialFocus
                 />
               </PopoverContent>
             </Popover>
           )}
         />
+        {errors.departureDate && (
+          <p className="text-xs text-red-500">{errors.departureDate.message}</p>
+        )}
       </div>
 
-      {/* Travellers */}
+      {/* Return Date - Only show for round trip */}
+      {tripType === "round_trip" && (
+        <div className="space-y-1">
+          <label htmlFor="returnDate" className="text-sm font-medium text-muted-foreground flex items-center">
+            <CalendarDaysIcon className="w-4 h-4 mr-2" /> Return
+          </label>
+          <Controller
+            name="returnDate"
+            control={control}
+            render={({ field }) => (
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className={cn(
+                      "w-full justify-start text-left font-normal",
+                      !field.value && "text-muted-foreground"
+                    )}
+                  >
+                    <CalendarDaysIcon className="mr-2 h-4 w-4" />
+                    {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <CustomDatePicker
+                    mode="single"
+                    selected={field.value}
+                    onSelect={field.onChange}
+                    disabled={(date) => date < (departureDate || new Date())}
+                    initialFocus
+                  />
+                </PopoverContent>
+              </Popover>
+            )}
+          />
+        </div>
+      )}
+
+      {/* Trip Type */}
+      <div className="space-y-1">
+        <label htmlFor="tripType" className="text-sm font-medium text-muted-foreground flex items-center">
+          <PlaneIcon className="w-4 h-4 mr-2" /> Trip Type
+        </label>
+        <Controller
+          name="tripType"
+          control={control}
+          render={({ field }) => (
+            <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select trip type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="round_trip">Round Trip</SelectItem>
+                <SelectItem value="one_way">One Way</SelectItem>
+              </SelectContent>
+            </Select>
+          )}
+        />
+      </div>
+
+      {/* Cabin Class */}
+      <div className="space-y-1">
+        <label htmlFor="cabinClass" className="text-sm font-medium text-muted-foreground">
+          Cabin Class
+        </label>
+        <Controller
+          name="cabinClass"
+          control={control}
+          render={({ field }) => (
+            <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select class" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="economy">Economy</SelectItem>
+                <SelectItem value="business">Business</SelectItem>
+                <SelectItem value="first">First Class</SelectItem>
+              </SelectContent>
+            </Select>
+          )}
+        />
+      </div>
+
+      {/* Passengers */}
       <div className="space-y-1">
         <label htmlFor="travellers" className="text-sm font-medium text-muted-foreground flex items-center">
-          <UsersIcon className="w-4 h-4 mr-2" /> Travellers
+          <UsersIcon className="w-4 h-4 mr-2" /> Passengers
         </label>
         <Controller
           name="travellers"
           control={control}
           render={({ field }) => (
             <Select onValueChange={field.onChange} defaultValue={field.value}>
-              <SelectTrigger id="travellers">
-                <SelectValue placeholder="Select" />
+              <SelectTrigger>
+                <SelectValue placeholder="Select passengers" />
               </SelectTrigger>
               <SelectContent>
-                {[1, 2, 3, 4, 5, 6].map((num) => (
-                  <SelectItem key={num} value={String(num)}>
-                    {num} Traveller{num > 1 ? "s" : ""}
+                {[1, 2, 3, 4, 5, 6, 7, 8].map((num) => (
+                  <SelectItem key={num} value={num.toString()}>
+                    {num} {num === 1 ? "Passenger" : "Passengers"}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
           )}
         />
-        {errors.travellers && <p className="text-xs text-red-500">{errors.travellers.message}</p>}
+        {errors.travellers && (
+          <p className="text-xs text-red-500">{errors.travellers.message}</p>
+        )}
       </div>
 
-      <Button type="submit" className="w-full lg:w-auto h-10 px-6 self-end mt-5 md:mt-0">
-        <SearchIcon className="w-5 h-5 mr-0 sm:mr-2" />
-        <span className="hidden sm:inline">Search</span>
-      </Button>
+      {/* Search Button */}
+      <div className="space-y-1">
+        <label className="text-sm font-medium text-muted-foreground opacity-0">
+          Search
+        </label>
+        <Button 
+          type="submit" 
+          className="w-full h-10 bg-blue-600 hover:bg-blue-700 text-white"
+          disabled={loading}
+        >
+          {loading ? (
+            <div className="flex items-center">
+              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+              Searching...
+            </div>
+          ) : (
+            <div className="flex items-center">
+              <SearchIcon className="w-4 h-4 mr-2" />
+              Search Flights
+            </div>
+          )}
+        </Button>
+      </div>
+
+      {/* Error Display */}
+      {error && (
+        <div className="col-span-full">
+          <p className="text-sm text-red-500 bg-red-50 p-2 rounded border border-red-200">
+            {error}
+          </p>
+        </div>
+      )}
     </form>
   )
 }

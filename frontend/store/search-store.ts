@@ -1,62 +1,90 @@
 import { create } from "zustand"
-import type { Listing, ListingType, SearchParams } from "@/types"
-import { allDummyData } from "@/lib/dummy-data" // Assuming combined data for easier filtering
+import type { SearchParams } from "@/types"
+import { 
+  apiService, 
+  type FlightSearchResponse, 
+  type FlightOption,
+  type AIInsightResponse,
+  convertSearchParamsToAPI 
+} from "@/lib/api"
 
 interface SearchState {
   searchParams: SearchParams | null
-  results: Listing[]
-  activeTab: ListingType
-  selectedListingIdForMap: string | null
+  flights: FlightOption[]
+  aiInsights: AIInsightResponse | null
+  loading: boolean
+  error: string | null
+  searchId: string | null
+  searchMetadata: any | null
+  
+  // Actions
   setSearchParams: (params: SearchParams) => void
-  fetchResults: (params: SearchParams) => void // Will simulate filtering
-  setActiveTab: (tab: ListingType) => void
-  setSelectedListingIdForMap: (id: string | null) => void
+  searchFlights: (params: SearchParams) => Promise<void>
+  getAIInsights: (searchId: string) => Promise<void>
+  clearResults: () => void
+  setError: (error: string | null) => void
 }
 
-export const useSearchStore = create<SearchState>((set) => ({
+export const useSearchStore = create<SearchState>((set, get) => ({
   searchParams: null,
-  results: allDummyData, // Initially show all, or could be empty
-  activeTab: "flight", // Default tab
-  selectedListingIdForMap: null,
+  flights: [],
+  aiInsights: null,
+  loading: false,
+  error: null,
+  searchId: null,
+  searchMetadata: null,
+
   setSearchParams: (params) => set({ searchParams: params }),
-  fetchResults: (params) => {
-    // Simulate filtering based on params.
-    // This is a very basic filter. A real app would have more complex logic.
-    let filtered = allDummyData
 
-    // Filter by Origin (primarily for flights)
-    if (params.origin && params.origin.trim() !== "") {
-      const originTerm = params.origin.toLowerCase()
-      filtered = filtered.filter((item) => {
-        if (item.type === "flight" && item.location?.from) {
-          return item.location.from.toLowerCase().includes(originTerm)
-        }
-        // For other types, origin might not be directly applicable in this simple model
-        // or you might want to include them if origin matches general location.
-        // For now, we only strictly filter flights by origin.
-        return item.type !== "flight" // Keep non-flight items if origin is specified
-        // or adjust this logic if origin should filter them too.
-      })
+  searchFlights: async (params) => {
+    set({ loading: true, error: null });
+    
+    try {
+      // Convert frontend params to API format
+      const apiParams = convertSearchParamsToAPI(params);
+      
+      // Call backend API
+      const response: FlightSearchResponse = await apiService.searchFlights(apiParams);
+      
+      set({
+        flights: response.flights,
+        searchId: response.search_id,
+        searchMetadata: response.search_metadata,
+        aiInsights: response.ai_insights || null,
+        loading: false,
+      });
+
+      // If no AI insights in response, fetch them separately
+      if (!response.ai_insights && response.search_id) {
+        get().getAIInsights(response.search_id);
+      }
+
+    } catch (error) {
+      console.error('Flight search failed:', error);
+      set({ 
+        error: error instanceof Error ? error.message : 'Search failed', 
+        loading: false 
+      });
     }
-
-    // Filter by Destination
-    if (params.destination) {
-      const searchTerm = params.destination.toLowerCase()
-      // If origin was specified, filter the already origin-filtered list.
-      // Otherwise, filter the full list.
-      const listToFilterByDestination = params.origin && params.origin.trim() !== "" ? filtered : allDummyData
-
-      filtered = listToFilterByDestination.filter(
-        (item) =>
-          item.name.toLowerCase().includes(searchTerm) ||
-          (item.location?.address && item.location.address.toLowerCase().includes(searchTerm)) ||
-          (item.type === "flight" && item.location?.to && item.location.to.toLowerCase().includes(searchTerm)),
-      )
-    }
-    // Add date filtering if params.departureDate / params.returnDate exist
-    // Add travellers filtering if params.travellers exists
-    set({ results: filtered, searchParams: params })
   },
-  setActiveTab: (tab) => set({ activeTab: tab }),
-  setSelectedListingIdForMap: (id) => set({ selectedListingIdForMap: id }),
+
+  getAIInsights: async (searchId) => {
+    try {
+      const insights = await apiService.getAIInsights(searchId);
+      set({ aiInsights: insights });
+    } catch (error) {
+      console.error('Failed to fetch AI insights:', error);
+      // Don't set error state for AI insights failure as it's not critical
+    }
+  },
+
+  clearResults: () => set({ 
+    flights: [], 
+    aiInsights: null, 
+    searchId: null, 
+    searchMetadata: null,
+    error: null 
+  }),
+
+  setError: (error) => set({ error }),
 }))
