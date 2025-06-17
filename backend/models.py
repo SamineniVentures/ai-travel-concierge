@@ -157,4 +157,4 @@ class HealthCheck(BaseModel):
     status: str
     version: str
     timestamp: datetime
-    services: Dict[str, str] 
+    services: Dict[str, str]

@@ -27,12 +27,12 @@ The AI Travel Concierge backend is now successfully deployed and running! Here's
 ## 🔧 Deployment Methods
 
 ### Method 1: Using the Deployment Script
-```bash
+\`\`\`bash
 ./deploy_backend.sh
-```
+\`\`\`
 
 ### Method 2: Manual Deployment
-```bash
+\`\`\`bash
 # 1. Activate virtual environment
 source venv/bin/activate
 
@@ -41,17 +41,17 @@ cd backend
 
 # 3. Start the server
 uvicorn main:app --host 0.0.0.0 --port 8000 --reload
-```
+\`\`\`
 
 ## 🧪 Testing the API
 
 ### Health Check
-```bash
+\`\`\`bash
 curl http://localhost:8000/api/health
-```
+\`\`\`
 
 ### Flight Search
-```bash
+\`\`\`bash
 curl -X POST http://localhost:8000/api/search-flights \
   -H "Content-Type: application/json" \
   -d '{
@@ -66,22 +66,22 @@ curl -X POST http://localhost:8000/api/search-flights \
     "trip_type": "round_trip",
     "currency": "USD"
   }'
-```
+\`\`\`
 
 ### AI Insights
-```bash
+\`\`\`bash
 curl http://localhost:8000/api/ai-insights/{search_id}
-```
+\`\`\`
 
 ## 🔑 Environment Variables
 
 Create a `.env` file in the root directory with:
 
-```env
+\`\`\`env
 OPENAI_API_KEY=your_openai_api_key
 SUPABASE_URL=your_supabase_url
 SUPABASE_KEY=your_supabase_anon_key
-```
+\`\`\`
 
 ## 📊 Features
 
@@ -130,4 +130,4 @@ SUPABASE_KEY=your_supabase_anon_key
 
 ## 📞 Support
 
-The backend is fully functional and ready for development and testing. All core endpoints are working with proper error handling and graceful degradation. 
+The backend is fully functional and ready for development and testing. All core endpoints are working with proper error handling and graceful degradation.

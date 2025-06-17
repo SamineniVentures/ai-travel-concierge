@@ -36,7 +36,7 @@ This PR implements a complete FastAPI backend for the AI Travel Concierge applic
 ## 🏗️ Architecture
 
 ### Service Layer Pattern
-```
+\`\`\`
 ┌─────────────────────────────────────────────────────────────┐
 │                    FastAPI Application                      │
 ├─────────────────────────────────────────────────────────────┤
@@ -56,7 +56,7 @@ This PR implements a complete FastAPI backend for the AI Travel Concierge applic
 │  ├── Database Models       # ORM entities                  │
 │  └── External APIs         # Third-party integrations      │
 └─────────────────────────────────────────────────────────────┘
-```
+\`\`\`
 
 ## 📁 Files Added/Modified
 
@@ -124,7 +124,7 @@ This PR implements a complete FastAPI backend for the AI Travel Concierge applic
 ## 🔄 Data Flow
 
 ### Flight Search Flow
-```
+\`\`\`
 1. User Input → Frontend Form
 2. Form Validation → TypeScript/Pydantic
 3. API Request → FastAPI Backend
@@ -133,20 +133,20 @@ This PR implements a complete FastAPI backend for the AI Travel Concierge applic
 6. AI Analysis → OpenAI Service
 7. Response → Frontend Display
 8. Analytics → Database Storage
-```
+\`\`\`
 
 ## 🚀 Deployment Ready
 
 ### Environment Variables Required
-```bash
+\`\`\`bash
 OPENAI_API_KEY=your_openai_api_key
 SUPABASE_URL=your_supabase_url
 SUPABASE_ANON_KEY=your_supabase_anon_key
 SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
-```
+\`\`\`
 
 ### Quick Start
-```bash
+\`\`\`bash
 # Install dependencies
 pip install -r requirements.txt
 
@@ -158,7 +158,7 @@ cd backend && python main.py
 
 # Access API docs
 open http://localhost:8000/docs
-```
+\`\`\`
 
 ## 🔮 Next Steps
 
@@ -202,4 +202,4 @@ open http://localhost:8000/docs
 **Ready for Review** ✅  
 **Tested Locally** ✅  
 **Documentation Complete** ✅  
-**Deployment Ready** ✅ 
+**Deployment Ready** ✅

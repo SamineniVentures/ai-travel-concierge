@@ -242,4 +242,4 @@ class SupabaseService:
             return False
 
 # Global Supabase service instance
-supabase_service = SupabaseService() 
+supabase_service = SupabaseService()

@@ -4,7 +4,7 @@
 
 The AI Travel Concierge is a modern, scalable travel booking platform that combines traditional flight search with AI-powered insights and recommendations.
 
-```
+\`\`\`
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
 │   Frontend      │    │    Backend      │    │   External      │
 │   (React/Next)  │◄──►│   (FastAPI)     │◄──►│   Services      │
@@ -15,7 +15,7 @@ The AI Travel Concierge is a modern, scalable travel booking platform that combi
                        │   Database      │    │   AI Services   │
                        │   (Supabase)    │    │   (OpenAI)      │
                        └─────────────────┘    └─────────────────┘
-```
+\`\`\`
 
 ## 🎯 Core Components
 
@@ -43,7 +43,7 @@ The AI Travel Concierge is a modern, scalable travel booking platform that combi
 
 ## 📁 Project Structure
 
-```
+\`\`\`
 ai-travel-concierge/
 ├── backend/                    # FastAPI Backend
 │   ├── main.py                # Main FastAPI application
@@ -62,12 +62,12 @@ ai-travel-concierge/
 ├── requirements.txt           # Python dependencies
 ├── package.json              # Node.js dependencies
 └── deploy_backend.sh         # Deployment script
-```
+\`\`\`
 
 ## 🔧 Backend Architecture
 
 ### Service Layer Pattern
-```
+\`\`\`
 ┌─────────────────────────────────────────────────────────────┐
 │                    FastAPI Application                      │
 ├─────────────────────────────────────────────────────────────┤
@@ -87,7 +87,7 @@ ai-travel-concierge/
 │  ├── Database Models       # ORM entities                  │
 │  └── External APIs         # Third-party integrations      │
 └─────────────────────────────────────────────────────────────┘
-```
+\`\`\`
 
 ### Key Services
 
@@ -124,7 +124,7 @@ ai-travel-concierge/
 ## 🎨 Frontend Architecture
 
 ### Component Hierarchy
-```
+\`\`\`
 App
 ├── Layout
 │   ├── Navbar
@@ -138,10 +138,10 @@ App
     ├── FlightCard
     ├── ResultsGrid
     └── AIInsights
-```
+\`\`\`
 
 ### State Management (Zustand)
-```typescript
+\`\`\`typescript
 // Search Store
 interface SearchState {
   searchParams: SearchParams | null
@@ -156,12 +156,12 @@ interface ItineraryState {
   totalPrice: number
   savedItineraries: Itinerary[]
 }
-```
+\`\`\`
 
 ## 🔄 Data Flow
 
 ### Flight Search Flow
-```
+\`\`\`
 1. User Input → Frontend Form
 2. Form Validation → TypeScript/Pydantic
 3. API Request → FastAPI Backend
@@ -170,16 +170,16 @@ interface ItineraryState {
 6. AI Analysis → OpenAI Service
 7. Response → Frontend Display
 8. Analytics → Database Storage
-```
+\`\`\`
 
 ### AI Insights Flow
-```
+\`\`\`
 1. Flight Data → LLM Service
 2. Prompt Engineering → LangChain
 3. AI Analysis → OpenAI GPT-4
 4. Structured Response → JSON
 5. Frontend Display → User Interface
-```
+\`\`\`
 
 ## 🛡️ Security & Performance
 
@@ -204,20 +204,20 @@ interface ItineraryState {
 ## 🚀 Deployment Architecture
 
 ### Development Environment
-```
+\`\`\`
 ┌─────────────────┐    ┌─────────────────┐
 │   Frontend      │    │    Backend      │
 │   localhost:3000│    │   localhost:8000│
 └─────────────────┘    └─────────────────┘
-```
+\`\`\`
 
 ### Production Environment
-```
+\`\`\`
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
 │   Frontend      │    │    Backend      │    │   Database      │
 │   Vercel/Netlify│    │   Railway/Heroku│    │   Supabase      │
 └─────────────────┘    └─────────────────┘    └─────────────────┘
-```
+\`\`\`
 
 ## 🔮 Future Enhancements
 
@@ -255,4 +255,4 @@ interface ItineraryState {
 - **Containerization**: Docker
 - **CI/CD**: GitHub Actions
 - **Monitoring**: Sentry
-- **Documentation**: Swagger/OpenAPI 
+- **Documentation**: Swagger/OpenAPI

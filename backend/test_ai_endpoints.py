@@ -129,4 +129,4 @@ async def test_ai_endpoints():
     print("   - Travel recommendations would be context-aware")
 
 if __name__ == "__main__":
-    asyncio.run(test_ai_endpoints()) 
+    asyncio.run(test_ai_endpoints())

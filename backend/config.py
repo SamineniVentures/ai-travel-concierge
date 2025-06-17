@@ -105,4 +105,4 @@ def load_environment_variables():
         print("No .env file found, using system environment variables")
 
 # Load environment variables on import
-load_environment_variables() 
+load_environment_variables()

@@ -36,4 +36,4 @@ echo "🔍 Flight Search: http://localhost:8000/api/search-flights"
 echo ""
 echo "Press Ctrl+C to stop the server"
 
-uvicorn main:app --host 0.0.0.0 --port 8000 --reload 
+uvicorn main:app --host 0.0.0.0 --port 8000 --reload

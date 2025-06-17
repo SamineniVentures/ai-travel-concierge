@@ -338,4 +338,4 @@ Format as JSON with the following structure:
             return {}
 
 # Global LLM service instance
-llm_service = LLMService() 
+llm_service = LLMService()
