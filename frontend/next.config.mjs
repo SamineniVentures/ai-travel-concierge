@@ -18,6 +18,15 @@ const nextConfig = {
       ...config.resolve.fallback,
       fs: false,
     };
+    
+    // Add alias resolution for @/lib/utils
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      '@': require('path').resolve(__dirname, './'),
+      '@/lib/utils': require('path').resolve(__dirname, './lib/utils.ts'),
+      '@/lib/api': require('path').resolve(__dirname, './lib/api.ts'),
+    };
+    
     return config;
   },
   images: {
