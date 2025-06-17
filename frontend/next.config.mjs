@@ -9,6 +9,17 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  experimental: {
+    esmExternals: true,
+  },
+  webpack: (config, { isServer }) => {
+    // Ensure proper module resolution
+    config.resolve.fallback = {
+      ...config.resolve.fallback,
+      fs: false,
+    };
+    return config;
+  },
   images: {
     unoptimized: true,
     remotePatterns: [
