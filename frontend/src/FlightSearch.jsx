@@ -5,10 +5,11 @@ export default function FlightSearch() {
   const [destination, setDestination] = useState('');
   const [date, setDate] = useState('');
   const [results, setResults] = useState([]);
+  const apiBase = import.meta.env.VITE_API_URL || '';
 
   const handleSearch = async () => {
     try {
-      const res = await fetch('/api/flights', {
+      const res = await fetch(`${apiBase}/api/flights`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ origin, destination, date })

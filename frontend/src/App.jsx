@@ -4,12 +4,13 @@ import Chat from './Chat';
 
 export default function App() {
   const [messages, setMessages] = useState([]);
+  const apiBase = import.meta.env.VITE_API_URL || '';
 
   const handleUserMessage = async (text) => {
     const userMessage = { sender: 'user', text };
     setMessages((msgs) => [...msgs, userMessage]);
     try {
-      const res = await fetch('/api/chat', {
+      const res = await fetch(`${apiBase}/api/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: text })
