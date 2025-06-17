@@ -1,7 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  basePath: '/frontend',
+  // Recommended for Vercel: enable output standalone for smaller deployment size
+  // output: 'standalone',
   eslint: {
     ignoreDuringBuilds: true,
   },

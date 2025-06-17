@@ -11,6 +11,7 @@ const inter = Inter({ subsets: ["latin"] })
 export const metadata: Metadata = {
   title: "Travel Booking Pro",
   description: "Find your next adventure",
+    generator: 'v0.dev'
 }
 
 export default function RootLayout({
@@ -23,7 +24,11 @@ export default function RootLayout({
       <body className={inter.className}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <Navbar />
-          <main className="pt-16">{children}</main>
+          <main className="pt-16">
+            {" "}
+            {/* Adjust pt to match navbar height */}
+            {children}
+          </main>
           <ItineraryDrawer />
         </ThemeProvider>
       </body>

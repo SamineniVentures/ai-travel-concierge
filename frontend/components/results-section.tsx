@@ -2,7 +2,7 @@
 import { Tab } from "@headlessui/react"
 import ResultsGrid from "./results-grid"
 import { useSearchStore } from "@/store/search-store"
-import { FlightIcon, HotelIcon, ActivityIcon } from "@/components/icons"
+import { FlightIcon, HotelIcon, ActivityIcon } from "@/components/icons" // Custom icons
 import { cn } from "@/lib/utils"
 
 const tabs = [

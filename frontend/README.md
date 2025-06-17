@@ -1,18 +1,26 @@
-# Travel Booking Frontend
+# Travel Booking Pro
 
-This is the frontend application for the Travel Booking Pro project, built with Next.js.
+A comprehensive travel booking interface built with Next.js, React, Tailwind CSS, TypeScript, Headless UI, React Hook Form, and Zustand.
 
-## Base Path Configuration
+## Features
 
-This application is configured to be served from the `/frontend` base path. This is set in `next.config.mjs`:
+- Sticky top navigation with logo, dark mode toggle, and sign-in link.
+- Hero search bar with destination input, custom date pickers, and travellers selector.
+- Tabbed results grid (Flights, Hotels, Experiences).
+- Expedia-like listing cards with image, name, price, rating, and free cancellation badge.
+- Mock map view that "pans" to the selected card.
+- Itinerary drawer (collapsible by day) to add and manage selected items.
 
-\`\`\`javascript
-// next.config.mjs
-const nextConfig = {
-  // ... other configs
-  basePath: '/frontend',
-};
-\`\`\`
+## Tech Stack
+
+- **Framework**: Next.js 14 (App Router)
+- **Styling**: Tailwind CSS 3
+- **UI Primitives**: Headless UI (for custom Date Picker, Tabs, Dialog, Disclosure)
+- **Form Management**: React Hook Form (with Zod for validation)
+- **State Management**: Zustand
+- **Language**: TypeScript
+- **Icons**: Lucide React
+- **Date Utilities**: date-fns
 
 ## Getting Started
 
@@ -21,11 +29,13 @@ const nextConfig = {
 - Node.js (v18 or later recommended)
 - npm or yarn
 
-### Installation (from within the `frontend` directory)
+### Installation
 
-1.  **Navigate to the `frontend` directory:**
+1.  **Clone the repository (or download the code):**
     \`\`\`bash
-    cd path/to/your-repo/frontend
+    # If you pushed this to GitHub:
+    # git clone <your-repo-url>
+    # cd travel-booking-pro
     \`\`\`
 
 2.  **Install dependencies:**
@@ -38,32 +48,38 @@ const nextConfig = {
 3.  **Run the development server:**
     \`\`\`bash
     npm run dev
+    # or
+    # yarn dev
     \`\`\`
-    Open [http://localhost:3000/frontend](http://localhost:3000/frontend) with your browser to see the result. Note the `/frontend` path.
+    Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-## Deployment
+## Project Structure
 
-### Vercel
+-   `app/`: Next.js App Router pages and layouts.
+-   `components/`: Reusable UI components.
+    -   `layout/`: Navbar, etc.
+    -   `ui/`: Generic UI elements like Button, Input (shadcn/ui style).
+    -   Other specific components like `HeroSearchForm`, `ListingCard`, etc.
+-   `lib/`: Utility functions and dummy data.
+-   `store/`: Zustand state management stores.
+-   `types/`: TypeScript type definitions.
+-   `public/`: Static assets.
 
-If deploying to Vercel (recommended for Next.js):
+## Key Components & Logic
 
-1.  Connect your GitHub repository to Vercel.
-2.  When configuring the project on Vercel, set the **Root Directory** to `frontend`.
-3.  Vercel will automatically detect it's a Next.js project and build it. The `basePath` configuration in `next.config.mjs` will ensure it's served correctly from the `/frontend` subpath on your Vercel deployment.
+-   **Custom Date Picker (`components/custom-date-picker.tsx`)**: Built using Headless UI primitives. This is a simplified version; a production-ready date picker is more complex.
+-   **State Management**:
+    -   `searchStore.ts`: Manages search parameters, results, active tab, and selected item for the map.
+    -   `itineraryStore.ts`: Manages items added to the itinerary and drawer visibility.
+-   **Dummy Data**: `lib/dummy-data.ts` provides seed data for flights, hotels, and experiences. The search functionality filters this data.
+-   **Map View**: `components/map-view.tsx` is a placeholder. A real map would require a library like Leaflet, Mapbox GL JS, or Google Maps API.
 
-### Other Platforms
+## Further Development
 
-For other platforms, ensure your server is configured to handle the Next.js application running with a `basePath`. You'll typically build the app (`npm run build` inside the `frontend` folder) and then serve the `.next` directory (which will be inside `frontend/.next`). Your reverse proxy or server will need to route requests for `/frontend/*` to this Next.js application.
-
-## Tech Stack
-
-- **Framework**: Next.js 14 (App Router)
-- **Styling**: Tailwind CSS 3
-- **UI Primitives**: Headless UI
-- **Form Management**: React Hook Form (with Zod for validation)
-- **State Management**: Zustand
-- **Language**: TypeScript
-- **Icons**: Lucide React
-- **Date Utilities**: date-fns
-
-(You can add more details about components and project structure here.)
+-   Implement real API calls for search and autocomplete.
+-   Integrate a fully functional map component.
+-   Add user authentication.
+-   Expand date picker functionality (e.g., range selection, better styling).
+-   Implement proper form validation and error handling.
+-   Add more sophisticated filtering and sorting for results.
+-   Unit and integration tests.

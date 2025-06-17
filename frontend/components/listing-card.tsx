@@ -17,7 +17,7 @@ export default function ListingCard({ listing }: ListingCardProps) {
 
   const handleAddToItinerary = () => {
     addItem(listing)
-    toggleDrawer(true)
+    toggleDrawer(true) // Open drawer when item is added
   }
 
   const renderStars = (rating: number) => {
@@ -41,7 +41,7 @@ export default function ListingCard({ listing }: ListingCardProps) {
       className="bg-card border rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-200 flex flex-col h-full cursor-pointer"
       onMouseEnter={() => setSelectedListingIdForMap(listing.id)}
       onMouseLeave={() => setSelectedListingIdForMap(null)}
-      onClick={() => setSelectedListingIdForMap(listing.id)}
+      onClick={() => setSelectedListingIdForMap(listing.id)} // Also select on click for touch devices
     >
       <div className="relative w-full aspect-[16/9]">
         <Image

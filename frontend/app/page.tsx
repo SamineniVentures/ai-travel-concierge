@@ -30,6 +30,8 @@ export default function HomePage() {
             <ResultsSection />
           </div>
           <aside className="lg:w-2/5 xl:w-1/3 lg:sticky lg:top-24 h-[calc(100vh-10rem)]">
+            {" "}
+            {/* Adjust top to match navbar height + padding */}
             <MapView />
           </aside>
         </div>

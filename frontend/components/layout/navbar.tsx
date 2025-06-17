@@ -2,7 +2,7 @@
 import Link from "next/link"
 import { PlaneTakeoffIcon, LogInIcon } from "lucide-react"
 import { DarkModeToggle } from "@/components/dark-mode-toggle"
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button" // Assuming you have a Button component
 
 export default function Navbar() {
   return (

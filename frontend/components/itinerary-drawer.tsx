@@ -1,18 +1,21 @@
 "use client"
 import { Fragment } from "react"
-import { Dialog, Transition, Disclosure } from "@headlessui/react"
+import { Dialog, Transition } from "@headlessui/react"
+import { Disclosure } from "@headlessui/react"
 import { XIcon, ChevronUpIcon, Trash2Icon } from "lucide-react"
 import { useItineraryStore } from "@/store/itinerary-store"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
-import { format, parseISO } from "date-fns"
-import type { Listing } from "@/types"
+import { format, parseISO } from "date-fns" // Assuming dates are ISO strings
 
 export default function ItineraryDrawer() {
   const { items, removeItem, isDrawerOpen, toggleDrawer } = useItineraryStore()
 
-  const groupedItems: { [key: string]: Listing[] } = items.reduce(
+  // Group items by day (simplified: assumes a 'date' property on items if applicable)
+  // For this example, we'll just list them. A real implementation would group by date.
+  const groupedItems: { [key: string]: typeof items } = items.reduce(
     (acc, item) => {
+      // Example grouping by a 'date' property if it exists, otherwise 'Unscheduled'
       const dateKey = item.date ? format(parseISO(item.date), "PPP") : "Unscheduled"
       if (!acc[dateKey]) {
         acc[dateKey] = []
@@ -20,7 +23,7 @@ export default function ItineraryDrawer() {
       acc[dateKey].push(item)
       return acc
     },
-    {} as { [key: string]: Listing[] },
+    {} as { [key: string]: typeof items },
   )
 
   return (
@@ -37,6 +40,7 @@ export default function ItineraryDrawer() {
         >
           <div className="fixed inset-0 bg-black bg-opacity-50 transition-opacity" />
         </Transition.Child>
+
         <div className="fixed inset-0 overflow-hidden">
           <div className="absolute inset-0 overflow-hidden">
             <div className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10 sm:pl-16">

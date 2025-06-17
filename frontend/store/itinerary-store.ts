@@ -14,6 +14,7 @@ export const useItineraryStore = create<ItineraryState>((set) => ({
   isDrawerOpen: false,
   addItem: (item) =>
     set((state) => {
+      // Prevent adding duplicates
       if (state.items.find((i) => i.id === item.id)) {
         return state
       }

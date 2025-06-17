@@ -1,5 +1,4 @@
-import ListingCard from "./listing-card" // Corrected import path
-import type { Listing } from "@/types"
+import ListingCard, { type Listing } from "./listing-card"
 
 interface ResultsGridProps {
   items: Listing[]
