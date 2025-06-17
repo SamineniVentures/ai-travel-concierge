@@ -1,3 +1,5 @@
+import path from 'path';
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
@@ -22,9 +24,9 @@ const nextConfig = {
     // Add alias resolution for @/lib/utils
     config.resolve.alias = {
       ...config.resolve.alias,
-      '@': require('path').resolve(__dirname, './'),
-      '@/lib/utils': require('path').resolve(__dirname, './lib/utils.ts'),
-      '@/lib/api': require('path').resolve(__dirname, './lib/api.ts'),
+      '@': path.resolve(process.cwd(), './'),
+      '@/lib/utils': path.resolve(process.cwd(), './lib/utils.ts'),
+      '@/lib/api': path.resolve(process.cwd(), './lib/api.ts'),
     };
     
     return config;
