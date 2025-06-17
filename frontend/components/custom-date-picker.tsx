@@ -1,6 +1,4 @@
 "use client"
-// Basic Headless UI Date Picker - This is a simplified version.
-// A full-featured one requires more effort.
 import { useState } from "react"
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react"
 import {
@@ -14,7 +12,7 @@ import {
   isEqual,
   isToday,
 } from "date-fns"
-import { cn } from "@/lib/utils" // Your cn utility
+import { cn } from "@/lib/utils"
 
 interface CustomDatePickerProps {
   selected?: Date
@@ -30,8 +28,7 @@ export function CustomDatePicker({ selected, onSelect, disabled }: CustomDatePic
     end: endOfMonth(currentMonth),
   })
 
-  // Add empty cells for days before the first day of the month
-  const startingDayIndex = getDay(startOfMonth(currentMonth)) // 0 for Sunday, 1 for Monday, etc.
+  const startingDayIndex = getDay(startOfMonth(currentMonth))
   const prefixDays = Array.from({ length: startingDayIndex }).map((_, i) => <div key={`empty-${i}`} />)
 
   const handlePrevMonth = () => setCurrentMonth(subMonths(currentMonth, 1))

@@ -1,4 +1,5 @@
-import ListingCard, { type Listing } from "./listing-card"
+import ListingCard from "./listing-card"
+import type { Listing } from "@/types"
 
 interface ResultsGridProps {
   items: Listing[]

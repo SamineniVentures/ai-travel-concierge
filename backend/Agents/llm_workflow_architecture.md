@@ -1,6 +1,6 @@
 # 🧠 End-to-End LLM System Workflow
 
-```
+\`\`\`
 1. Data Collection
 2. Data Extraction & Cleaning
 3. Text Embedding
@@ -9,7 +9,7 @@
 6. Model Context Protocol (MCP)
 7. LLM Interaction (Open/Custom)
 8. Output Evaluation & Monitoring
-```
+\`\`\`
 
 ---
 
@@ -79,9 +79,9 @@
 
 ## 🔁 Iterative RAG Loop
 
-```
+\`\`\`
 Collect → Extract → Embed → Retrieve → Build Context (MCP) → Generate → Evaluate → Improve
-```
+\`\`\`
 
 ---
 
@@ -101,4 +101,3 @@ Collect → Extract → Embed → Retrieve → Build Context (MCP) → Generate 
 ---
 
 > ✅ This README provides a modular, end-to-end architecture for building intelligent LLM agents with memory, tool use, and evaluation. Adapt this template to fit your use case: travel concierge, support bot, planner, or research assistant.
-

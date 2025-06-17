@@ -7,11 +7,11 @@ The `frontend` directory contains a React application built with [Vite](https://
 
 ### Development server
 
-```
+\`\`\`
 cd frontend
 npm install
 npm run dev
-```
+\`\`\`
 
 The app will be available at `http://localhost:5173`.
 The development server uses `VITE_API_URL` from `.env.development` to proxy API
@@ -20,10 +20,10 @@ different port.
 
 ### Production build
 
-```
+\`\`\`
 cd frontend
 npm run build
-```
+\`\`\`
 
 This will generate the static files in `frontend/dist`.
 
@@ -47,10 +47,10 @@ Flights API.
 Create an environment variable with your Skyscanner API key before starting the
 server:
 
-```bash
+\`\`\`bash
 export SKYSCANNER_API_KEY=<your_key>
 uvicorn backend.main:app --reload
-```
+\`\`\`
 
 The API will then be available at `http://localhost:8000` and the React app can
 access it via `/api/flights`.
